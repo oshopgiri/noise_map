@@ -1,7 +1,13 @@
 __pycache__
 
+# Mac files
+**/.DS_Store
+
 # Virtual ENV files
 .venv/
 
-# PyCHarm stuff
+# PyCharm stuff
 .idea
+
+# Jupyter cache
+**/.ipynb_checkpoints

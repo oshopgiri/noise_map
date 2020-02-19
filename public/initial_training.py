@@ -8,7 +8,7 @@ MODEL_FILE_PATH = '../app/static/model.dat'
 if os.path.exists(MODEL_FILE_PATH):
     os.remove(MODEL_FILE_PATH)
 
-dataset = pandas.read_csv('../app/static/output.csv')
+dataset = pandas.read_csv('../app/static/input.csv')
 X = dataset.iloc[:, :-1].values
 Y = dataset.iloc[:, -1].values
 

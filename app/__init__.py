@@ -5,17 +5,19 @@ mongo = PyMongo()
 
 
 def create_app(config_filename=None):
-    application = Flask(__name__, instance_relative_config=True, static_url_path='/public')
-    application.config.from_pyfile(config_filename)
-    application.config["MONGO_URI"] = "mongodb://localhost:27017/niose_app"
+    application = Flask(__name__, instance_relative_config=True, static_url_path='', static_folder='public')
+    # application.config.from_pyfile(config_filename)
+    application.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/codeitup_team10'
 
     initialize_extensions(application)
     register_blueprints(application)
     return application
 
+
 def initialize_extensions(application):
     mongo.init_app(application)
-    from app.models.user import User
+    from app.models.location import Location
+
 
 def register_blueprints(application):
     from app.controllers import predict_blueprints

@@ -27,14 +27,15 @@
     map.on('load', function() {
       
       var xhr = new XMLHttpRequest();
-      var filePath = '';
-      xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4){
-              filePath = xhr.responseText;
-          }
-      };
-      xhr.open('GET', 'https://www.google.com');
-      xhr.send();
+      // var filePath = '/current_state';
+      var filePath = '/static/noise.geojson';
+      // xhr.onreadystatechange = function() {
+      //     if (xhr.readyState === 4){
+      //         filePath = xhr.responseText;
+      //     }
+      // };
+      // xhr.open('GET', 'https://www.google.com');
+      // xhr.send();
             
       map.addSource('noise', {
         'type': 'geojson',

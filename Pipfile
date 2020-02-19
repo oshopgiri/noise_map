@@ -13,6 +13,7 @@ sklearn = "*"
 joblib = "*"
 requests = "*"
 flask-pymongo = "*"
+geojson = "*"
 
 [requires]
 python_version = "3.6"

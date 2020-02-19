@@ -5,7 +5,7 @@ mongo = PyMongo()
 
 
 def create_app(config_filename=None):
-    application = Flask(__name__, instance_relative_config=True, static_url_path='', static_folder='public')
+    application = Flask(__name__, instance_relative_config=True)
     # application.config.from_pyfile(config_filename)
     application.config['MONGO_URI'] = 'mongodb://127.0.0.1:27017/codeitup_team10'
 

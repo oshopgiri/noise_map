@@ -12,6 +12,7 @@ numpy = "*"
 sklearn = "*"
 joblib = "*"
 requests = "*"
+flask-pymongo = "*"
 
 [requires]
 python_version = "3.6"

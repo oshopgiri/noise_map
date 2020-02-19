@@ -1,27 +1,10 @@
 from flask import jsonify, render_template
-<<<<<<< Updated upstream
 import joblib
 import numpy
-from sklearn.linear_model import LinearRegression
 
 
 def index():
     return render_template('index.html')
-=======
-
-import app.helpers.predict_service as ps
-from app.models.user import User
-from app import mongo
-
-
-def index():
-    users = {"hello": "Flask!!!"}
-
-    #User.post()
-    users = User.get()
-    ps.say_hello('hello')
-    return jsonify({'data': users})
->>>>>>> Stashed changes
 
 
 def predict():

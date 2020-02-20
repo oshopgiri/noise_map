@@ -1,7 +1,9 @@
+from geojson import FeatureCollection, Feature, Point
 import json
 import requests
 import time
-from geojson import FeatureCollection, Feature, Point
+
+from app.models.location import Location
 
 
 def get_current_noise_levels():
@@ -22,27 +24,25 @@ def get_current_noise_levels():
     return current_noise_levels
 
 
-def format_for_interface(noise_levels, location_information):
-    # display_data = {
-    #     "type": "FeatureCollection",
-    #     "crs": {
-    #         "type": "name",
-    #         "properties": {
-    #             "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-    #         }
-    #     },
-    #     "features": []
-    # }
+def predict_future_noise_levels():
+    pass
+
+
+def format_to_geojson(noise_levels):
+    location_information = Location.list()
 
     features = []
     for location_number in noise_levels.keys():
         features.append(
             Feature(
-                geometry=Point((location_information[location_number]['longitude'], location_information[location_number]['latitude'])),
+                geometry=Point((
+                    location_information[location_number]['longitude'],
+                    location_information[location_number]['latitude']
+                )),
                 properties={
                     "id": str(location_number),
                     "name": location_information[location_number]['name'],
-                    "noise": int(noise_levels[location_number])
+                    "noise": noise_levels[location_number]
                 }
             )
         )

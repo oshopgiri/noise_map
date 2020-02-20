@@ -1,69 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Create a heatmap layer</title>
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
-<style>
-	body { margin: 0; padding: 0; }
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-</style>
+    <title>NoiseMap</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS dependencies -->
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #map {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        #date-time-picker-container {
+            position: fixed;
+            top: 0.5em;
+            left: 0.5em;
+            margin-bottom: 0.5em;
+            margin-right: 0.5em;
+            padding: 0.5em 1em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
+            width: 25em;
+            height: 3em;
+            background: white;
+        }
+
+        #date-time-picker-container input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+        }
+
+        #date-time-picker-container input:focus {
+            outline: 0;
+        }
+    </style>
 </head>
 <body>
-<div id="map"></div>
+<div id="map" class="container-fluid"></div>
+
+<div id="date-time-picker-container">
+    <input type="text" id="date-time-picker" placeholder="Select Date & Time"/>
+</div>
+
+<!-- JS dependencies -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"
+        integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"
+        integrity="sha256-5YmaxAwMjIpMrVlK84Y/+NjCpKnFYa8bWWBbUHSBGfU=" crossorigin="anonymous"></script>
 
 <script>
-	mapboxgl.accessToken = 'pk.eyJ1Ijoic3VzaHBvcCIsImEiOiJjazZ0OTBndjgwNTMzM210Nm5qejYxNXBwIn0.rECkzGnGNf6F8GDN-Cz3DA';
-    var map = new mapboxgl.Map({
+    $(document).ready(function () {
+        $('#date-time-picker').datetimepicker();
+    });
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic3VzaHBvcCIsImEiOiJjazZ0OTBndjgwNTMzM210Nm5qejYxNXBwIn0.rECkzGnGNf6F8GDN-Cz3DA';
+
+    const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10',
-        // center: [10, 50],
         center: [-6.2605, 53.350],
-        zoom: 11        
+        zoom: 12,
+        minZoom: 11
     });
-    
-    map.on('load', function() {
-      
-      var xhr = new XMLHttpRequest();
-      // var filePath = '/current_state';
-      var filePath = '/static/noise.geojson';
-      // xhr.onreadystatechange = function() {
-      //     if (xhr.readyState === 4){
-      //         filePath = xhr.responseText;
-      //     }
-      // };
-      // xhr.open('GET', 'https://www.google.com');
-      // xhr.send();
-            
-      map.addSource('noise', {
-        'type': 'geojson',
-        // 'data': 'sushpop.ck6tdc5zo0bkg2xnsurhk5b8l-8b6cy'
-        'data' : filePath//'./noise.geojson'
-      });
-      map.addLayer({
-        'id' : 'noise',
-        'type' : 'heatmap',
-        'source' : 'noise',      
-        'paint': {
 
-          'heatmap-weight': [
-          'interpolate',
-          ['linear'],
-          ['get', 'noise'],
-          60,
-          1,
-          70,
-          2,
-          80,
-          5  
-          ]
+    map.on('load', function () {
+        $.ajax({
+            url: '/current_state', success: function (result) {
+                map.addSource('noise', {
+                    'type': 'geojson',
+                    'data': result
+                });
 
-        }
-      })   
+                map.addLayer({
+                    'id': 'noise',
+                    'type': 'heatmap',
+                    'source': 'noise',
+                    'paint': {
+
+                        'heatmap-weight': [
+                            'interpolate',
+                            ['linear'],
+                            ['get', 'noise'],
+                            60,
+                            1,
+                            70,
+                            2,
+                            80,
+                            5
+                        ]
+
+                    }
+                })
+            }
+        });
     });
 </script>
-
 </body>
 </html>

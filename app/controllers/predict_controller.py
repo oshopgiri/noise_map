@@ -1,14 +1,12 @@
-from flask import jsonify, render_template, send_from_directory
+from flask import jsonify, render_template
+import geojson
 import joblib
 import numpy
 import os
-import pathlib
 import random
 import string
-import geojson
 
-from app.helpers.predict_service import format_for_interface, get_current_noise_levels
-from app.models.location import Location
+from app.helpers.predict_service import format_to_geojson, get_current_noise_levels
 
 
 def index():
@@ -16,12 +14,11 @@ def index():
 
 
 def current_state():
-    geo_data = format_for_interface(get_current_noise_levels(), Location.list())
-    file_name = f"{''.join(random.sample(string.ascii_lowercase, 10))}.geojson"
-    file = open(os.path.join('app', 'static', file_name), 'w+')
-    file.write(geojson.dumps(geo_data, sort_keys=True))
-    file.close()
-    return f"static/{file_name}"
+    geo_data = format_to_geojson(get_current_noise_levels())
+    file_name = f"{''.join(random.sample(string.ascii_lowercase, 16))}.geojson"
+    with open(os.path.join('app', 'static', 'geojsons', file_name), 'w') as file:
+        geojson.dump(geo_data, file, indent=4, sort_keys=True)
+    return os.path.join('static', 'geojsons', file_name)
 
 
 def predict():

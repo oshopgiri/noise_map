@@ -11,3 +11,6 @@ __pycache__
 
 # Jupyter cache
 **/.ipynb_checkpoints
+
+# geojson files
+**/*.geojson
